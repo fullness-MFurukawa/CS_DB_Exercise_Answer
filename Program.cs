@@ -6,22 +6,25 @@ class Program
 {
     static void Main(string[] args)
     {
-         // 演習用DbContextを生成する
+        // 演習用DbContextを生成する
         var context = new AppDbContext();
-        // departmentテーブルアクセスクラスを生成する
-        var accessor = new DepartmentAccessor(context);
+        // employeeテーブルアクセスクラスを生成する
+        var accessor = new EmployeeAccessor(context);
 
-        Console.Write("部署Idを入力してください->");
-        var deptId = int.Parse(Console.ReadLine()!);
-        var department = accessor.FindById(deptId);
-        Console.WriteLine("演習-06 departmentテーブルから主キー値で部署を取得する");
-        if (department != null)
+        Console.Write("キーワードを入力してください->");
+        var keyword = Console.ReadLine();
+        var employees = accessor.FindByContaintsName(keyword!);
+        Console.WriteLine("演習-08 employeeテーブルから社員名の部分一致検索で該当社員を取得する");
+        if (employees != null)
         {
-            Console.WriteLine(department);
+            foreach(var employee in employees)
+            {
+                Console.WriteLine(employee);
+            }
         }
         else
         {
-            Console.WriteLine($"部署Id:{deptId}の部署は存在しません");
+            Console.WriteLine($"キーワード:{keyword}が含まれる社員は存在しません");
         }
     }
 }
