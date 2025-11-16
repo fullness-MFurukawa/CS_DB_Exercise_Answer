@@ -214,45 +214,44 @@ INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (4,1,300
 INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (4,1,500,17);
 
 -- ============================
--- 部門 DEPARTMENT
+-- 部門 department
 -- ============================
-CREATE TABLE DEPARTMENT
+CREATE TABLE department
 (
-  DEPT_NO   INT AUTO_INCREMENT,
-  DEPT_NAME VARCHAR(20) NOT NULL,
-  CONSTRAINT PK_DEPT_NO PRIMARY KEY (DEPT_NO),
-  CONSTRAINT NN_DEPT_NAME CHECK (DEPT_NAME <> '')
+  id   INT AUTO_INCREMENT,
+  name VARCHAR(20) NOT NULL,
+  CONSTRAINT PK_DEPT_ID PRIMARY KEY (id),
+  CONSTRAINT NN_DEPT_NAME CHECK (name <> '')
 ) ENGINE=InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-INSERT INTO DEPARTMENT (DEPT_NAME) VALUES ('総務部');
-INSERT INTO DEPARTMENT (DEPT_NAME) VALUES ('経理部');
-INSERT INTO DEPARTMENT (DEPT_NAME) VALUES ('人事部');
-INSERT INTO DEPARTMENT (DEPT_NAME) VALUES ('開発部');
-INSERT INTO DEPARTMENT (DEPT_NAME) VALUES ('営業部');
+INSERT INTO department (name) VALUES ('総務部');
+INSERT INTO department (name) VALUES ('経理部');
+INSERT INTO department (name) VALUES ('人事部');
+INSERT INTO department (name) VALUES ('開発部');
+INSERT INTO department (name) VALUES ('営業部');
 
 -- ============================
 -- 社員 EMPLOYEE
 -- ============================
-CREATE TABLE EMPLOYEE
+CREATE TABLE employee
 (
-  EMP_NO  INT AUTO_INCREMENT,
-  NAME    VARCHAR(20) NOT NULL,
-  DEPT_NO INT,
-  CONSTRAINT PK_EMP_NO PRIMARY KEY (EMP_NO),
-  CONSTRAINT FK_DEPT_NO FOREIGN KEY (DEPT_NO)
-      REFERENCES DEPARTMENT(DEPT_NO)
+  id  INT AUTO_INCREMENT,
+  name    VARCHAR(20) NOT NULL,
+  dept_id INT,
+  CONSTRAINT PK_EMP_NO PRIMARY KEY (id),
+  CONSTRAINT FK_DEPT_NO FOREIGN KEY (dept_id)
+      REFERENCES department(id)
 ) ENGINE=InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
--- 元SQLは DEPT_ID になっていたが、カラム名は DEPT_NO なので修正
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('田中太郎',102);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('鈴木三郎',101);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('佐藤花子',104);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('中田彩子',105);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('加藤圭太',103);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('松本良太',104);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('山下孝輔',105);
-INSERT INTO EMPLOYEE (NAME, DEPT_NO) VALUES ('渡辺大輔',104);
+INSERT INTO employee (name, dept_id) VALUES ('田中太郎',2);
+INSERT INTO employee (name, dept_id) VALUES ('鈴木三郎',1);
+INSERT INTO employee (name, dept_id) VALUES ('佐藤花子',4);
+INSERT INTO employee (name, dept_id) VALUES ('中田彩子',5);
+INSERT INTO employee (name, dept_id) VALUES ('加藤圭太',3);
+INSERT INTO employee (name, dept_id) VALUES ('松本良太',4);
+INSERT INTO employee (name, dept_id) VALUES ('山下孝輔',5);
+INSERT INTO employee (name, dept_id) VALUES ('渡辺大輔',4);
