@@ -48,4 +48,14 @@ public class EmployeeAccessor
         }
         return employees;
     }
+
+    /// <summary>
+    /// 演習-09 employeeテーブルに新しい社員の情報を登録する
+    /// </summary>
+    /// <param name="employee"></param>
+    public void Create(EmployeeEntity employee)
+    {
+        _context.Employees.Add(employee);
+        _context.SaveChanges();
+    }
 }

@@ -1,6 +1,6 @@
 ﻿using CS_DB_Exercise_Answer.Infrastructures.Accessors;
 using CS_DB_Exercise_Answer.Infrastructures.Contexts;
-
+using CS_DB_Exercise_Answer.Infrastructures.Entities;
 namespace CS_DB_Exercise_Answer;
 class Program
 {
@@ -9,22 +9,26 @@ class Program
         // 演習用DbContextを生成する
         var context = new AppDbContext();
         // employeeテーブルアクセスクラスを生成する
-        var accessor = new EmployeeAccessor(context);
+        var employeeAccessor = new EmployeeAccessor(context);
+        var departmentAccessor = new DepartmentAccessor(context);
 
-        Console.Write("キーワードを入力してください->");
-        var keyword = Console.ReadLine();
-        var employees = accessor.FindByContaintsName(keyword!);
-        Console.WriteLine("演習-08 employeeテーブルから社員名の部分一致検索で該当社員を取得する");
-        if (employees != null)
+        Console.Write("社員名を入力してください->");
+        var name = Console.ReadLine();
+        Console.Write("部署Idを入力してください->");
+        var deptId = int.Parse(Console.ReadLine()!);
+
+        Console.WriteLine("演習-09 employeeテーブルに新しい社員の情報を登録する");
+        if ( departmentAccessor.FindById(deptId) == null)
         {
-            foreach(var employee in employees)
-            {
-                Console.WriteLine(employee);
-            }
+            Console.WriteLine($"部署Id:{deptId}は存在しないため、社員登録できません");
+            return;
         }
-        else
+        var newEployee = new EmployeeEntity
         {
-            Console.WriteLine($"キーワード:{keyword}が含まれる社員は存在しません");
-        }
+            Name = name,
+            DeptId = deptId
+        };
+        employeeAccessor.Create(newEployee);
+        Console.WriteLine($"社員名:{name}、部署Id:{deptId}の社員を登録しました");
     }
 }
