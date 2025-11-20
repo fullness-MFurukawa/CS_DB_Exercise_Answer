@@ -58,4 +58,20 @@ public class EmployeeAccessor
         _context.Employees.Add(employee);
         _context.SaveChanges();
     }
+
+     /// <summary>
+    /// 演習-10 指定された社員Idの社員名を変更する
+    /// </summary>
+    /// <param name="employee">変更する社員情報</param>
+    /// <returns>変更結果</returns>
+    public EmployeeEntity? UpdateById(EmployeeEntity employee)
+    {
+        var existingEmployee = _context.Employees.Find(employee.Id);
+        if (existingEmployee != null)
+        {
+            existingEmployee.Name = employee.Name;
+            _context.SaveChanges();
+        }
+        return existingEmployee;
+    }
 }

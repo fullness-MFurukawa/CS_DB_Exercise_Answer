@@ -10,25 +10,23 @@ class Program
         var context = new AppDbContext();
         // employeeテーブルアクセスクラスを生成する
         var employeeAccessor = new EmployeeAccessor(context);
-        var departmentAccessor = new DepartmentAccessor(context);
 
+        Console.Write("社員Idを入力してください->");
+        var empId = int.Parse(Console.ReadLine()!);
         Console.Write("社員名を入力してください->");
         var name = Console.ReadLine();
-        Console.Write("部署Idを入力してください->");
-        var deptId = int.Parse(Console.ReadLine()!);
-
-        Console.WriteLine("演習-09 employeeテーブルに新しい社員の情報を登録する");
-        if ( departmentAccessor.FindById(deptId) == null)
+        Console.WriteLine("演習-10 指定された社員Idの社員名を変更する");
+        var updateEployee = new EmployeeEntity
         {
-            Console.WriteLine($"部署Id:{deptId}は存在しないため、社員登録できません");
+            Id = empId,
+            Name = name,
+        };
+        var result = employeeAccessor.UpdateById(updateEployee);
+        if (result == null)
+        {
+            Console.WriteLine($"社員Id:{empId}の社員は存在しないため変更できませんでした");
             return;
         }
-        var newEployee = new EmployeeEntity
-        {
-            Name = name,
-            DeptId = deptId
-        };
-        employeeAccessor.Create(newEployee);
-        Console.WriteLine($"社員名:{name}、部署Id:{deptId}の社員を登録しました");
+        Console.WriteLine($"社員名:を{result.Name}に変更しました");
     }
 }
