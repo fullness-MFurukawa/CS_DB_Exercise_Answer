@@ -74,4 +74,20 @@ public class EmployeeAccessor
         }
         return existingEmployee;
     }
+
+    /// <summary>
+    /// 演習-11 指定された社員Idの社員を削除する
+    /// </summary>
+    /// <param name="id">社員Id</param>
+    /// <returns>削除した社員情報</returns>
+    public EmployeeEntity? DeleteById(int id)
+    {
+        var employee = _context.Employees.Find(id);
+        if (employee != null)
+        {
+            _context.Employees.Remove(employee);
+            _context.SaveChanges();
+        }
+        return employee;
+    }
 }

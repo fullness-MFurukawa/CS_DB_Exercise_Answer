@@ -1,6 +1,5 @@
 ﻿using CS_DB_Exercise_Answer.Infrastructures.Accessors;
 using CS_DB_Exercise_Answer.Infrastructures.Contexts;
-using CS_DB_Exercise_Answer.Infrastructures.Entities;
 namespace CS_DB_Exercise_Answer;
 class Program
 {
@@ -13,20 +12,15 @@ class Program
 
         Console.Write("社員Idを入力してください->");
         var empId = int.Parse(Console.ReadLine()!);
-        Console.Write("社員名を入力してください->");
-        var name = Console.ReadLine();
-        Console.WriteLine("演習-10 指定された社員Idの社員名を変更する");
-        var updateEployee = new EmployeeEntity
-        {
-            Id = empId,
-            Name = name,
-        };
-        var result = employeeAccessor.UpdateById(updateEployee);
+        
+        Console.WriteLine("演習-11 指定された社員Idの社員を削除する\r\n");
+        var result = employeeAccessor.DeleteById(empId);
         if (result == null)
         {
-            Console.WriteLine($"社員Id:{empId}の社員は存在しないため変更できませんでした");
+            Console.WriteLine($"社員Id:{empId}の社員は存在しないため削除できませんでした");
             return;
         }
-        Console.WriteLine($"社員名:を{result.Name}に変更しました");
+        Console.WriteLine($"社員Id:{empId}の社員を削除しました");
+
     }
 }
