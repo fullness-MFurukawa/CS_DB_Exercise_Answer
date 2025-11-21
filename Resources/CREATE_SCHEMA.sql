@@ -188,7 +188,7 @@ CREATE TABLE sales_detail
   quantity  INT,
   subtotal  INT,
   item_id   INT,
-  CONSTRAINT sales_detail_pk PRIMARY KEY (id, sales_id),
+  PRIMARY KEY (id),
   CONSTRAINT sales_detail_item_fk FOREIGN KEY (item_id)
       REFERENCES item (id),
   CONSTRAINT sales_fk FOREIGN KEY (sales_id)
@@ -196,6 +196,7 @@ CREATE TABLE sales_detail
 ) ENGINE=InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
+
 
 -- 売上データ + 明細データ
 INSERT INTO sales (sales_date, total, account_id) VALUES ('2020-05-01',240,1);
