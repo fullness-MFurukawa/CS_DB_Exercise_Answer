@@ -1,5 +1,6 @@
 ﻿using CS_DB_Exercise_Answer.Infrastructures.Accessors;
 using CS_DB_Exercise_Answer.Infrastructures.Contexts;
+using CS_DB_Exercise_Answer.Infrastructures.Entities;
 namespace CS_DB_Exercise_Answer;
 class Program
 {
@@ -10,20 +11,23 @@ class Program
         // departmentテーブルアクセスクラスを生成する
         var departmentAccessor = new DepartmentAccessor(context);
 
-        Console.Write("部署Idを入力してください->");
-        var deptId = int.Parse(Console.ReadLine()!);
-        
-        Console.WriteLine("演習-14 指定された部署Idの部署と所属社員を取得する");
-        var result = departmentAccessor.FindByIdJoinEmployee(deptId);
-        if (result == null)
+        using var transaction = context.Database.BeginTransaction();   
+        Console.WriteLine("トランザクションを開始しました。");
+        Console.Write("新しい部署名を入力してください->");
+        var name = Console.ReadLine();
+        var entity = new DepartmentEntity{
+            Id = 0,
+            Name = name
+        };
+        var result = departmentAccessor.Create(entity);
+        Console.WriteLine($"新しい部署を登録しました: 部署Id={result.Id} , 部署名={result.Name}");
+        transaction.Commit();
+        Console.WriteLine("トランザクションをコミットしました。");
+
+        var departments = departmentAccessor.FindAll();
+        foreach (var department in departments)
         {
-            Console.WriteLine($"部署Id:{deptId}の部署は存在しませんでした");
-            return;
-        }
-        Console.WriteLine(result);
-        foreach(var employee in result.Employees!)
-        {
-            Console.WriteLine(employee);
+            Console.WriteLine(department);
         }
     }
 }

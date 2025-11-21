@@ -63,4 +63,15 @@ public class DepartmentAccessor
             .SingleOrDefault();
         return department;
     }
+
+    /// <summary>
+    /// 演習-15 トランザクション制御機能を確認する
+    /// </summary>
+    /// <param name="department"></param>
+    public DepartmentEntity Create(DepartmentEntity department)
+    {
+        var result = _context.Departments.Add(department);
+        _context.SaveChanges();
+        return result.Entity;
+    }
 }
