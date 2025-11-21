@@ -1,6 +1,6 @@
 ﻿using CS_DB_Exercise_Answer.Infrastructures.Contexts;
 using CS_DB_Exercise_Answer.Infrastructures.Entities;
-
+using Microsoft.EntityFrameworkCore;
 namespace CS_DB_Exercise_Answer.Infrastructures.Accessors;
 /// <summary>
 /// employeeテーブルにアクセスするクラス
@@ -88,6 +88,20 @@ public class EmployeeAccessor
             _context.Employees.Remove(employee);
             _context.SaveChanges();
         }
+        return employee;
+    }
+
+    /// <summary>
+    /// 演習-13 指定された氏名で社員と所属部署を取得する
+    /// </summary>
+    /// <param name="name">社員名</param>
+    /// <returns>検索結果</returns>
+    public EmployeeEntity? FindByNameJoinDepartment(string name)
+    {
+        var employee = _context.Employees
+            .Include(e => e.Department)
+            .Where(e => e.Name == name)
+            .SingleOrDefault();
         return employee;
     }
 }

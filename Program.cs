@@ -7,20 +7,23 @@ class Program
     {
         // 演習用DbContextを生成する
         var context = new AppDbContext();
-        // employeeテーブルアクセスクラスを生成する
-        var employeeAccessor = new EmployeeAccessor(context);
+        // departmentテーブルアクセスクラスを生成する
+        var departmentAccessor = new DepartmentAccessor(context);
 
-        Console.Write("社員Idを入力してください->");
-        var empId = int.Parse(Console.ReadLine()!);
+        Console.Write("部署Idを入力してください->");
+        var deptId = int.Parse(Console.ReadLine()!);
         
-        Console.WriteLine("演習-11 指定された社員Idの社員を削除する\r\n");
-        var result = employeeAccessor.DeleteById(empId);
+        Console.WriteLine("演習-14 指定された部署Idの部署と所属社員を取得する");
+        var result = departmentAccessor.FindByIdJoinEmployee(deptId);
         if (result == null)
         {
-            Console.WriteLine($"社員Id:{empId}の社員は存在しないため削除できませんでした");
+            Console.WriteLine($"部署Id:{deptId}の部署は存在しませんでした");
             return;
         }
-        Console.WriteLine($"社員Id:{empId}の社員を削除しました");
-
+        Console.WriteLine(result);
+        foreach(var employee in result.Employees!)
+        {
+            Console.WriteLine(employee);
+        }
     }
 }
