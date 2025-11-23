@@ -8,16 +8,6 @@ namespace CS_DB_Exercise_Answer.Infrastructures.Adapters;
 /// </summary>
 public class EmployeeEntityAdapter : IEmployeeAdapter<EmployeeEntity>
 {
-    private readonly IDepartmentAdapter<DepartmentEntity> _adapter;
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
-    /// <param name="adapter">DepartmentとDepartmentEntityとの相互変換</param>
-    public EmployeeEntityAdapter(IDepartmentAdapter<DepartmentEntity> adapter)
-    {
-        _adapter = adapter;
-    }
-
     /// <summary>
     /// EmployeeEntityからドメインオブジェクトEmployeeを復元する
     /// </summary>
