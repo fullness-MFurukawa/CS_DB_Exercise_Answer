@@ -1,3 +1,5 @@
+-- ==========================================
+-- PostgreSQL 17 用 初期化SQL（cs_db_exercise）
+-- ==========================================
 CREATE DATABASE cs_db_exercise
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_0900_ai_ci;
+  WITH ENCODING 'UTF8';

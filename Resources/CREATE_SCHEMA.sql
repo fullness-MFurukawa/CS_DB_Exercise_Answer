@@ -1,32 +1,30 @@
--- 作業するデータベースを選択（事前に CREATE DATABASE cs_db_exercise しておく）
-USE cs_db_exercise;
+-- ==========================================
+-- PostgreSQL 17 用 初期化SQL（cs_db_exercise）
+-- ==========================================
 
--- 外部キー制約を気にせず削除するため一時的に無効化
-SET FOREIGN_KEY_CHECKS = 0;
+-- 事前に接続先DBを cs_db_exercise にしておく
+-- psqlの場合: \c cs_db_exercise
 
-DROP TABLE IF EXISTS sales_detail; 
-DROP TABLE IF EXISTS sales; 
-DROP TABLE IF EXISTS item_stock; 
-DROP TABLE IF EXISTS account; 
-DROP TABLE IF EXISTS account_role; 
+-- 依存関係を考慮して削除（FKがある側→参照先の順にDROP）
+DROP TABLE IF EXISTS sales_detail;
+DROP TABLE IF EXISTS sales;
+DROP TABLE IF EXISTS item_stock;
+DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS account;
+DROP TABLE IF EXISTS account_role;
 DROP TABLE IF EXISTS item;
 DROP TABLE IF EXISTS item_category;
-DROP TABLE IF EXISTS EMPLOYEE;
-DROP TABLE IF EXISTS DEPARTMENT;
-
-SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================
 -- アカウント権限 account_role
 -- ============================
 CREATE TABLE account_role
 (
-  role_id   INT AUTO_INCREMENT NOT NULL,
-  role_name VARCHAR(20),
+  role_id   integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  role_name varchar(20),
   CONSTRAINT account_role_pk PRIMARY KEY (role_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 INSERT INTO account_role (role_name) VALUES ('ADMIN');
 INSERT INTO account_role (role_name) VALUES ('USER');
@@ -37,37 +35,33 @@ INSERT INTO account_role (role_name) VALUES ('GUEST');
 -- ============================
 CREATE TABLE account
 (
-  user_id      INT AUTO_INCREMENT NOT NULL,
-  user_name    VARCHAR(20),
-  password     VARCHAR(100),
-  display_name VARCHAR(20),
-  enabled      TINYINT(1), -- 1: TRUE, 0: FALSE
-  role_id      INT,
+  user_id      integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  user_name    varchar(20),
+  password     varchar(100),
+  display_name varchar(20),
+  enabled      boolean, -- true/false
+  role_id      integer,
   CONSTRAINT account_pk PRIMARY KEY (user_id),
   CONSTRAINT account_role_fk FOREIGN KEY (role_id)
       REFERENCES account_role (role_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('YAMADA','pass1','山田太郎',1,2);
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('SUZUKI','pass2','鈴木花子',1,2);
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('TANAKA','pass3','田中二郎',1,2);
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('YAMAMOTO','pass4','山本涼子',1,2);
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('STOU','pass5','佐藤光一',1,2);
-INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('PEKIN','pass100','ゼンジー北京',1,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('YAMADA','pass1','山田太郎',true,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('SUZUKI','pass2','鈴木花子',true,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('TANAKA','pass3','田中二郎',true,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('YAMAMOTO','pass4','山本涼子',true,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('STOU','pass5','佐藤光一',true,2);
+INSERT INTO account (user_name, password, display_name, enabled, role_id) VALUES ('PEKIN','pass100','ゼンジー北京',true,2);
 
 -- ============================
 -- 商品カテゴリ item_category
 -- ============================
 CREATE TABLE item_category
 (
-  id   INT AUTO_INCREMENT NOT NULL,
-  name VARCHAR(20),
+  id   integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name varchar(20),
   CONSTRAINT item_category_pk PRIMARY KEY (id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 INSERT INTO item_category (name) VALUES ('文房具');
 INSERT INTO item_category (name) VALUES ('雑貨');
@@ -78,16 +72,14 @@ INSERT INTO item_category (name) VALUES ('パソコン周辺機器');
 -- ============================
 CREATE TABLE item
 (
-  id          INT AUTO_INCREMENT NOT NULL,
-  name        VARCHAR(30),
-  price       INT,
-  category_id INT,
+  id          integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  name        varchar(30),
+  price       integer,
+  category_id integer,
   CONSTRAINT item_pk PRIMARY KEY (id),
   CONSTRAINT item_category_fk FOREIGN KEY (category_id)
       REFERENCES item_category (id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 INSERT INTO item (name, price, category_id) VALUES ('水性ボールペン(黒)',120,1);
 INSERT INTO item (name, price, category_id) VALUES ('水性ボールペン(赤)',120,1);
@@ -123,15 +115,13 @@ INSERT INTO item (name, price, category_id) VALUES ('無線式キーボード',1
 -- ============================
 CREATE TABLE item_stock
 (
-  id      INT AUTO_INCREMENT NOT NULL,
-  stock   INT,
-  item_id INT,
+  id      integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  stock   integer,
+  item_id integer,
   CONSTRAINT item_stock_pk PRIMARY KEY (id),
   CONSTRAINT item_fk FOREIGN KEY (item_id)
       REFERENCES item (id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 INSERT INTO item_stock (stock, item_id) VALUES (20,1);
 INSERT INTO item_stock (stock, item_id) VALUES (20,2);
@@ -167,40 +157,35 @@ INSERT INTO item_stock (stock, item_id) VALUES (5,28);
 -- ============================
 CREATE TABLE sales
 (
-  id         INT AUTO_INCREMENT NOT NULL,
-  sales_date DATE,
-  total      INT,
-  account_id INT,
+  id         integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  sales_date date,
+  total      integer,
+  account_id integer,
   CONSTRAINT sales_pk PRIMARY KEY (id),
   CONSTRAINT account_fk FOREIGN KEY (account_id)
       REFERENCES account (user_id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 -- ============================
 -- 売上明細 sales_detail
 -- ============================
 CREATE TABLE sales_detail
 (
-  id        INT AUTO_INCREMENT NOT NULL,
-  sales_id  INT NOT NULL,
-  quantity  INT,
-  subtotal  INT,
-  item_id   INT,
-  PRIMARY KEY (id),
+  id        integer GENERATED ALWAYS AS IDENTITY NOT NULL,
+  sales_id  integer NOT NULL,
+  quantity  integer,
+  subtotal  integer,
+  item_id   integer,
+  CONSTRAINT sales_detail_pk PRIMARY KEY (id),
   CONSTRAINT sales_detail_item_fk FOREIGN KEY (item_id)
       REFERENCES item (id),
   CONSTRAINT sales_fk FOREIGN KEY (sales_id)
       REFERENCES sales (id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
-
+);
 
 -- 売上データ + 明細データ
 INSERT INTO sales (sales_date, total, account_id) VALUES ('2020-05-01',240,1);
-INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (1,2,240,1); -- 120x2 のイメージなど
+INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (1,2,240,1);
 
 INSERT INTO sales (sales_date, total, account_id) VALUES ('2020-05-05',300,2);
 INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (2,1,100,4);
@@ -219,13 +204,11 @@ INSERT INTO sales_detail (sales_id, quantity, subtotal, item_id) VALUES (4,1,500
 -- ============================
 CREATE TABLE department
 (
-  id   INT AUTO_INCREMENT,
-  name VARCHAR(20) NOT NULL,
-  CONSTRAINT PK_DEPT_ID PRIMARY KEY (id),
-  CONSTRAINT NN_DEPT_NAME CHECK (name <> '')
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+  id   integer GENERATED ALWAYS AS IDENTITY,
+  name varchar(20) NOT NULL,
+  CONSTRAINT pk_dept_id PRIMARY KEY (id),
+  CONSTRAINT nn_dept_name CHECK (name <> '')
+);
 
 INSERT INTO department (name) VALUES ('総務部');
 INSERT INTO department (name) VALUES ('経理部');
@@ -234,19 +217,17 @@ INSERT INTO department (name) VALUES ('開発部');
 INSERT INTO department (name) VALUES ('営業部');
 
 -- ============================
--- 社員 EMPLOYEE
+-- 社員 employee
 -- ============================
 CREATE TABLE employee
 (
-  id  INT AUTO_INCREMENT,
-  name    VARCHAR(20) NOT NULL,
-  dept_id INT,
-  CONSTRAINT PK_EMP_NO PRIMARY KEY (id),
-  CONSTRAINT FK_DEPT_NO FOREIGN KEY (dept_id)
+  id      integer GENERATED ALWAYS AS IDENTITY,
+  name    varchar(20) NOT NULL,
+  dept_id integer,
+  CONSTRAINT pk_emp_no PRIMARY KEY (id),
+  CONSTRAINT fk_dept_no FOREIGN KEY (dept_id)
       REFERENCES department(id)
-) ENGINE=InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+);
 
 INSERT INTO employee (name, dept_id) VALUES ('田中太郎',2);
 INSERT INTO employee (name, dept_id) VALUES ('鈴木三郎',1);
