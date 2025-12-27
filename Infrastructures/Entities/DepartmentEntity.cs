@@ -12,10 +12,12 @@ public class DepartmentEntity
     /// 部署Id
     /// </summary>
     [Key]
+    [Column("id")]
     public int Id       { get; set; }
     /// <summary>
     /// 部署名
     /// </summary>
+    [Column("name")]
     public string? Name { get; set; }
 
     /// <summary>

@@ -12,10 +12,12 @@ public class EmployeeEntity
     /// 社員Id
     /// </summary>
     [Key]
+    [Column("id")]
     public int Id { get; set; }
     /// <summary>
     /// 社員名
     /// </summary>
+    [Column("name")]
     public string? Name { get; set; }
     /// <summary>
     /// 部署Id

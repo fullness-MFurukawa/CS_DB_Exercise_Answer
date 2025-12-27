@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace CS_DB_Exercise_Answer.Infrastructures.Contexts;
-
 /// <summary>
 /// 演習-04 DBContext継承クラスとプロパティを実装する
 /// </summary>
@@ -25,11 +24,11 @@ public class AppDbContext : DbContext
     {
         // 接続文字列（サーバー名、DB名、ユーザー名、パスワード）
         string connectionString =
-        "Server=localhost;Database=cs_db_exercise;User=root;Password=root;";
+            "Host=localhost;Database=cs_db_exercise;Username=postgres;Password=training;";
 
         optionsBuilder
-        // MySQLデータベースに接続する設定
-        .UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 43)))
+        // PostgreSQLデータベースに接続する設定
+        .UseNpgsql(connectionString)
         // 実行されたSQLをコンソールに表示する
         .LogTo(Console.WriteLine, LogLevel.Information)
         // パラメーターの値もログに表示する
